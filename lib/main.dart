@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/disclaimer_screen.dart';
 import 'screens/checklist_screen.dart';
 
-void main() {
-  runApp(const DocPrepApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final accepted = prefs.getBool('disclaimer_accepted') ?? false;
+  runApp(DocPrepApp(disclaimerAccepted: accepted));
 }
 
 class DocPrepApp extends StatelessWidget {
-  const DocPrepApp({super.key});
+  final bool disclaimerAccepted;
+  const DocPrepApp({super.key, required this.disclaimerAccepted});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +21,10 @@ class DocPrepApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4A7C6F), // muted teal — calm, medical-adjacent
+          seedColor: const Color(0xFF4A7C6F),
           brightness: Brightness.light,
         ),
         useMaterial3: true,
-        // Clean readable font
         textTheme: const TextTheme(
           headlineMedium: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           bodyMedium: TextStyle(fontSize: 15, height: 1.6),
@@ -39,7 +44,9 @@ class DocPrepApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const ChecklistScreen(),
+      home: disclaimerAccepted
+          ? const ChecklistScreen()
+          : const DisclaimerScreen(),
     );
   }
 }
