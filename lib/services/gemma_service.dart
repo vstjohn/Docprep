@@ -6,7 +6,7 @@ class GemmaService {
   static const _apiKey = String.fromEnvironment('GEMMA_API_KEY');
 
   static final _model = GenerativeModel(
-    model: 'gemma-2-0-flash-lite',
+    model: 'gemma-3-27b-it',
     apiKey: _apiKey,
   );
 
